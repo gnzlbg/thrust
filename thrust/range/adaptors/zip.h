@@ -42,25 +42,25 @@ RETURNS(make_iterator_range(detail::make_zip_iterator_(begin(ranges)...),
 namespace detail {
 
 template<typename InputIterator0>
-zip_iterator<tuple<InputIterator0> > make_zip_iterator(InputIterator0 it0)
+zip_iterator<tuple<InputIterator0> > make_zip_iterator_(InputIterator0 it0)
 { return make_tuple(it0); }
 
 template<typename InputIterator0, typename InputIterator1>
 zip_iterator<tuple<InputIterator0, InputIterator1> >
-make_zip_iterator(InputIterator0 it0, InputIterator1 it1)
+make_zip_iterator_(InputIterator0 it0, InputIterator1 it1)
 { return make_tuple(it0, it1); }
 
 template<typename InputIterator0, typename InputIterator1,
          typename InputIterator2>
 zip_iterator<tuple<InputIterator0, InputIterator1, InputIterator2> >
-make_zip_iterator(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2)
+make_zip_iterator_(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2)
 { return make_tuple(it0, it1, it2); }
 
 template<typename InputIterator0, typename InputIterator1,
          typename InputIterator2, typename InputIterator3>
 zip_iterator<tuple<InputIterator0, InputIterator1, InputIterator2,
                    InputIterator3> >
-make_zip_iterator(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2,
+make_zip_iterator_(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2,
                   InputIterator3 it3)
 { return make_tuple(it0, it1, it2, it3); }
 
@@ -69,16 +69,18 @@ make_zip_iterator(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2,
 template<typename SinglePassRange0>
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator> > >
 zip(SinglePassRange0 range0) {
-  return make_iterator_range(make_zip_iterator(range0.begin()),
-                               make_zip_iterator(range0.end()));
+  return make_iterator_range(detail::make_zip_iterator_(range0.begin()),
+                             detail::make_zip_iterator_(range0.end()));
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1>
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator> > >
 zip(SinglePassRange0 range0, SinglePassRange1 range1) {
-  return make_iterator_range(make_zip_iterator(range0.begin(), range1.begin()),
-                               make_zip_iterator(range0.end(), range1.end()));
+  return make_iterator_range(detail::make_zip_iterator_(range0.begin(),
+                                                        range1.begin()),
+                             detail::make_zip_iterator_(range0.end(),
+                                                        range1.end()));
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1,
@@ -88,10 +90,12 @@ iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange2::iterator> > >
 zip(SinglePassRange0 range0, SinglePassRange1 range1,
       SinglePassRange2 range2) {
-  return make_iterator_range(make_zip_iterator(range0.begin(), range1.begin(),
-                                                 range2.begin()),
-                               make_zip_iterator(range0.end(), range1.end(),
-                                                   range2.end()));
+  return make_iterator_range(detail::make_zip_iterator_(range0.begin(),
+                                                        range1.begin(),
+                                                        range2.begin()),
+                             detail::make_zip_iterator_(range0.end(),
+                                                        range1.end(),
+                                                        range2.end()));
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1,
@@ -102,10 +106,14 @@ iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange3::iterator> > >
 zip(SinglePassRange0 range0, SinglePassRange1 range1,
       SinglePassRange2 range2, SinglePassRange3 range3) {
-  return make_iterator_range(make_zip_iterator(range0.begin(), range1.begin(),
-                                               range2.begin(), range3.begin()),
-                             make_zip_iterator(range0.end(), range1.end(),
-                                                 range2.end(), range3.end()));
+  return make_iterator_range(detail::make_zip_iterator_(range0.begin(),
+                                                        range1.begin(),
+                                                        range2.begin(),
+                                                        range3.begin()),
+                             detail::make_zip_iterator_(range0.end(),
+                                                        range1.end(),
+                                                        range2.end(),
+                                                        range3.end()));
 }
 
 #endif
