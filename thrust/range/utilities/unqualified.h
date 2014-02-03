@@ -13,11 +13,35 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
+/// \file \brief unqualified type trait
+
 #pragma once
 
-/// \file \brief Includes all range utilities
+#if __cplusplus == 201103L
 
-#include<thrust/range/utilities/begin.h>
-#include<thrust/range/utilities/end.h>
-#include<thrust/range/utilities/returns.h>
-#include<thrust/range/utilities/unqualified.h>
+#include <type_traits>
+
+namespace thrust {
+
+/// Removes reference and const-volatile qualifiers (as auto i = expr; does)
+template <class T>
+using unqualified_t = typename std::remove_cv
+    <typename std::remove_reference<T>::type>::type;
+
+}  // namespace thrust
+
+#elif __cplusplus > 201103L
+
+namespace thrust {
+
+/// Removes reference and const-volatile qualifiers (as auto i = expr; does)
+template <class T>
+using unqualified_t = std::remove_cv_t<std::remove_reference_t<T>>;
+
+}  // namespace thrust
+
+#else // C++ < 11
+
+///...
+
+#endif
