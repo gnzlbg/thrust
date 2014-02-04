@@ -32,18 +32,22 @@ using std::begin;
 #else
 
 template<typename SinglePassRange>
+__host__ __device__
 typename SinglePassRange::iterator begin(SinglePassRange & range)
 { return range.begin(); }
 
 template<typename SinglePassRange>
+__host__ __device__
 typename SinglePassRange::const_iterator begin(SinglePassRange const& range)
 { return range.begin(); }
 
 template<typename T, std::size_t size>
+__host__ __device__
 inline T* begin(T (&array)[size])
 { return array; }
 
 template<typename T, std::size_t size>
+__host__ __device__
 inline const T* begin(const T (&array)[size])
 { return array; }
 

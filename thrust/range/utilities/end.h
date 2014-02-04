@@ -30,18 +30,22 @@ using std::end;
 #else
 
 template<typename SinglePassRange>
+__host__ __device__
 typename SinglePassRange::iterator end(SinglePassRange& range)
 { return range.end(); }
 
 template<typename SinglePassRange>
+__host__ __device__
 typename SinglePassRange::const_iterator end(SinglePassRange const& range)
 { return range.end(); }
 
 template<typename T, std::size_t size>
+__host__ __device__
 inline T* end(T (&array)[size])
 { return array + size; }
 
 template<typename T, std::size_t size>
+__host__ __device__
 inline const T* end(const T (&array)[size])
 { return array + size; }
 

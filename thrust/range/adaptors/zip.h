@@ -27,12 +27,14 @@ namespace thrust {
 namespace detail {
 
 template<typename... InputIterators>
+__host__ __device__
 auto make_zip_iterator_(InputIterators... inputIterators)
 RETURNS(zip_iterator<tuple<InputIterators...>>{make_tuple(inputIterators...)});
 
 }  // namespace detail
 
 template<typename... SinglePassRanges>
+__host__ __device__
 auto zip(SinglePassRanges&&... ranges)
 RETURNS(make_iterator_range(detail::make_zip_iterator_(begin(ranges)...),
                             detail::make_zip_iterator_(end(ranges)...)));
@@ -42,22 +44,26 @@ RETURNS(make_iterator_range(detail::make_zip_iterator_(begin(ranges)...),
 namespace detail {
 
 template<typename InputIterator0>
+__host__ __device__
 zip_iterator<tuple<InputIterator0> > make_zip_iterator_(InputIterator0 it0)
 { return make_tuple(it0); }
 
 template<typename InputIterator0, typename InputIterator1>
+__host__ __device__
 zip_iterator<tuple<InputIterator0, InputIterator1> >
 make_zip_iterator_(InputIterator0 it0, InputIterator1 it1)
 { return make_tuple(it0, it1); }
 
 template<typename InputIterator0, typename InputIterator1,
          typename InputIterator2>
+__host__ __device__
 zip_iterator<tuple<InputIterator0, InputIterator1, InputIterator2> >
 make_zip_iterator_(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2)
 { return make_tuple(it0, it1, it2); }
 
 template<typename InputIterator0, typename InputIterator1,
          typename InputIterator2, typename InputIterator3>
+__host__ __device__
 zip_iterator<tuple<InputIterator0, InputIterator1, InputIterator2,
                    InputIterator3> >
 make_zip_iterator_(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2,
@@ -67,6 +73,7 @@ make_zip_iterator_(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2,
 }  // namespace detail
 
 template<typename SinglePassRange0>
+__host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator> > >
 zip(SinglePassRange0 range0) {
   return make_iterator_range(detail::make_zip_iterator_(range0.begin()),
@@ -74,6 +81,7 @@ zip(SinglePassRange0 range0) {
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1>
+__host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator> > >
 zip(SinglePassRange0 range0, SinglePassRange1 range1) {
@@ -85,6 +93,7 @@ zip(SinglePassRange0 range0, SinglePassRange1 range1) {
 
 template<typename SinglePassRange0, typename SinglePassRange1,
          typename SinglePassRange2>
+__host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator,
                                   typename SinglePassRange2::iterator> > >
@@ -100,6 +109,7 @@ zip(SinglePassRange0 range0, SinglePassRange1 range1,
 
 template<typename SinglePassRange0, typename SinglePassRange1,
          typename SinglePassRange2, typename SinglePassRange3>
+__host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator,
                                   typename SinglePassRange2::iterator,
