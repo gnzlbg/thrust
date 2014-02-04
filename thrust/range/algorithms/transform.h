@@ -43,8 +43,7 @@ template<typename SinglePassRange, typename OutputIterator,
          typename UnaryFunction>
 typename thrust::detail::enable_if<
   !models::single_pass_range<OutputIterator>::value, OutputIterator>::type
-OutputIterator transform(SinglePassRange const& range, OutputIterator output,
-                         UnaryFunction op) {
+transform(SinglePassRange const& range, OutputIterator output, UnaryFunction op) {
   using thrust::system::detail::generic::select_system;
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type  System1;
