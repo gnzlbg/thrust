@@ -30,20 +30,28 @@ namespace thrust
 ///  \ingroup algorithms
 /// \{
 
+#if __cplusplus >= 201103L  // \todo C++03 depends on WAR for concept overl.
+
 /// \brief Copies the \t SinglePassRange \p range to the \t OutputIterator \p
 /// result
 template<typename SinglePassRange, typename OutputIterator>
 typename thrust::detail::enable_if<
   !models::single_pass_range<OutputIterator>::value, OutputIterator>::type
 copy(SinglePassRange const& range, OutputIterator result)
-{ return copy(range.begin(), range.end(), result); }
+{ return copy(thrust::begin(range), thrust::end(range), result); }
+
+#endif
 
 /// \brief Copies the \t SinglePassRange range to the \t OutputRange \p result.
 template<typename SinglePassRange, typename OutputRange>
+#if __cplusplus >= 201103L
 typename thrust::detail::enable_if<
   models::single_pass_range<OutputRange>::value, OutputRange>::type
+#else
+OutputRange
+#endif
 copy(SinglePassRange const& range, OutputRange& result) {
-  copy(range.begin(), range.end(), result.begin());
+copy(thrust::begin(range), thrust::end(range), thrust::begin(result));
   return result;
 }
 

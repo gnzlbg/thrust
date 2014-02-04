@@ -34,7 +34,8 @@ SinglePassRange for_each(SinglePassRange const& range, UnaryFunction op) {
   typedef typename thrust::iterator_system<Iterator>::type System;
 
   System system;
-  thrust::for_each(select_system(system), range.begin(), range.end(), op);
+  thrust::for_each(select_system(system), thrust::begin(range),
+                   thrust::end(range), op);
   return range;
 }
 

@@ -27,7 +27,8 @@ SinglePassRange sequence(SinglePassRange& range, T init = T(), T step = T(1)) {
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type System;
   System system;
-  thrust::sequence(select_system(system), begin(range), end(range), init, step);
+  thrust::sequence(select_system(system), thrust::begin(range),
+                   thrust::end(range), init, step);
   return range;
 }
 

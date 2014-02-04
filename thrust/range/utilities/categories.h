@@ -1,3 +1,20 @@
+///
+///  Copyright 2014 Gonzalo Brito Gadeschi
+///
+///  Licensed under the Apache License, Version 2.0 (the "License");
+///  you may not use this file except in compliance with the License.
+///  You may obtain a copy of the License at
+///
+///  http://www.apache.org/licenses/LICENSE-2.0
+///
+///  Unless required by applicable law or agreed to in writing, software
+///  distributed under the License is distributed on an "AS IS" BASIS,
+///  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+///  See the License for the specific language governing permissions and
+///  limitations under the License.
+
+/// \file \brief Range categories and concept checking utilities
+
 #pragma once
 
 namespace thrust {
@@ -12,6 +29,8 @@ struct BidirectionalRange : ForwardRange            {};
 struct RandomAccessRange  : BidirectionalRange      {};
 
 }  // namespace range_tags
+
+#if __cplusplus >= 201103L  // \todo Provide C++03 workaround for this:
 
 namespace models {
 
@@ -37,5 +56,7 @@ template<class T> struct single_pass_range {
 };
 
 }  // namespace models
+
+#endif  // C++ version >= C++11
 
 }  // namespace thrust

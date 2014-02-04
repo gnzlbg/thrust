@@ -38,8 +38,8 @@ T transform_reduce(SinglePassRange const& range, UnaryFunction unary_op,
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type System;
   System system;
-  return thrust::transform_reduce(select_system(system), range.begin(),
-                                  range.end(), unary_op, init, binary_op);
+  return thrust::transform_reduce(select_system(system), thrust::begin(range),
+                                  thrust::end(range), unary_op, init, binary_op);
 }
 
 /// \} // end transformed_reductions

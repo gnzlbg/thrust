@@ -33,8 +33,8 @@ SinglePassRange transform(SinglePassRange& range, UnaryFunction op) {
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type  System;
   System system;
-  thrust::transform(select_system(system), range.begin(), range.end(),
-                    range.begin(), op);
+  thrust::transform(select_system(system), thrust::begin(range),
+                    thrust::end(range), thrust::begin(range), op);
   return range;
 }
 
@@ -50,8 +50,8 @@ OutputIterator transform(SinglePassRange const& range, OutputIterator output,
   typedef typename thrust::iterator_system<OutputIterator>::type System2;
   System1 system1;
   System2 system2;
-  return thrust::transform(select_system(system1,system2), range.begin(),
-                           range.end(), output, op);
+  return thrust::transform(select_system(system1,system2), thrust::begin(range),
+                           thrust::end(range), output, op);
 }
 
 /// \brief Assing to the \t SinglePassRange \p output the result of transforming
@@ -63,8 +63,8 @@ SinglePassRange transform(SinglePassRange const& range, SinglePassRange& output,
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type  System;
   System system;
-  thrust::transform(select_system(system), range.begin(), range.end(), output,
-                    op);
+  thrust::transform(select_system(system), thrust::begin(range),
+                    thrust::end(range), output, op);
   return output;
 }
 

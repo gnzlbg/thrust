@@ -19,13 +19,10 @@
 
 namespace thrust {
 
-template<class Integral> struct counting_range
-: thrust::iterator_range<thrust::counting_iterator<Integral> > {};
-
 template<class Integral>
 __host__ __device__
-counting_range<Integral> make_counting_range(Integral const& b,
-                                             Integral const& e) {
+iterator_range<thrust::counting_iterator<Integral> >
+make_counting_range(Integral const& b, Integral const& e) {
   return thrust::make_iterator_range(
       thrust::counting_iterator<Integral>(b),
       thrust::counting_iterator<Integral>(e));

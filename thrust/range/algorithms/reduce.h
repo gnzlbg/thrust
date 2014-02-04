@@ -38,8 +38,8 @@ T reduce(SinglePassRange const& range, T init = T(),
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type System;
   System system;
-  return thrust::reduce(select_system(system), begin(range), end(range),
-                        init, binary_op);
+  return thrust::reduce(select_system(system), thrust::begin(range),
+                        thrust::end(range), init, binary_op);
 }
 
 /// \}  // end reductions

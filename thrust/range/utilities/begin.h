@@ -31,13 +31,13 @@ using std::begin;
 
 #else
 
-template<typename T>
-inline typename iterator_range<T>::iterator begin(T& r)
-{ return r.begin(); }
+template<typename SinglePassRange>
+typename SinglePassRange::iterator begin(SinglePassRange & range)
+{ return range.begin(); }
 
-template<typename T>
-inline typename iterator_range<const T>::iterator begin(const T& r)
-{ return r.begin(); }
+template<typename SinglePassRange>
+typename SinglePassRange::const_iterator begin(SinglePassRange const& range)
+{ return range.begin(); }
 
 template<typename T, std::size_t size>
 inline T* begin(T (&array)[size])

@@ -29,13 +29,13 @@ using std::end;
 
 #else
 
-template<typename T>
-inline typename iterator_range<T>::iterator end(T& r)
-{ return r.end(); }
+template<typename SinglePassRange>
+typename SinglePassRange::iterator end(SinglePassRange& range)
+{ return range.end(); }
 
-template<typename T>
-inline typename iterator_range<const T>::iterator end(const T& r)
-{ return r.end(); }
+template<typename SinglePassRange>
+typename SinglePassRange::const_iterator end(SinglePassRange const& range)
+{ return range.end(); }
 
 template<typename T, std::size_t size>
 inline T* end(T (&array)[size])
