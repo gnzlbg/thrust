@@ -19,6 +19,7 @@
 
 #include <thrust/reduce.h>
 #include <thrust/functional.h>
+#include <thrust/range/utilities.h>
 
 namespace thrust {
 
@@ -28,7 +29,8 @@ namespace thrust {
 /// \brief Reduces the \t SinglePassRange \p range with the \t BinaryFunction \p
 /// binary_op to a value of type \t T using \p init as the initial reduction
 /// value.
-template<typename SinglePassRange, typename T,
+template<typename SinglePassRange,
+         typename T = typename SinglePassRange::value_type,
          typename BinaryFunction = plus<T> >
 T reduce(SinglePassRange const& range, T init = T(),
          BinaryFunction binary_op = BinaryFunction()) {
@@ -36,7 +38,7 @@ T reduce(SinglePassRange const& range, T init = T(),
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type System;
   System system;
-  return thrust::reduce(select_system(system), range.begin(), range.end(),
+  return thrust::reduce(select_system(system), begin(range), end(range),
                         init, binary_op);
 }
 

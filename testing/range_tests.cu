@@ -37,5 +37,8 @@ void TestGeneralRange(void) {
   ASSERT_EQUAL(output[1], 9);
   ASSERT_EQUAL(output[2], 12);
   ASSERT_EQUAL(output[3], 15);
+
+  // test reduce = 6 + 9 + 12 + 15 = 42
+  ASSERT_EQUAL(thrust::reduce(output), 15);
 }
 DECLARE_VECTOR_UNITTEST(TestGeneralRange);
