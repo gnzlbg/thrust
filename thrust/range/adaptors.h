@@ -19,3 +19,4 @@
 #pragma once
 
 #include <thrust/range/adaptors/zip.h>
+#include <thrust/range/adaptors/transformed.h>

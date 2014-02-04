@@ -21,3 +21,4 @@
 #include<thrust/range/utilities/end.h>
 #include<thrust/range/utilities/returns.h>
 #include<thrust/range/utilities/unqualified.h>
+#include<thrust/range/utilities/categories.h>

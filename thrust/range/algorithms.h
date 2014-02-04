@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <thrust/range/algorithms/copy.h>
 #include <thrust/range/algorithms/for_each.h>
 #include <thrust/range/algorithms/reduce.h>
 #include <thrust/range/algorithms/transform.h>

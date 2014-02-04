@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <thrust/range/utilities/categories.h>
 #include <thrust/range/utilities.h>
 
 namespace thrust {
@@ -169,9 +170,12 @@ inline bool operator>=(iterator_range<Iterator> const& l,
                        iterator_range<Iterator> const& r)
 { return !(l < r); }
 
+
+/// \brief Returns the \t Iterator range [\p begin, \p end)
 template<typename Iterator>
 __host__ __device__
-iterator_range<Iterator> make_iterator_range(Iterator const& b, Iterator const& e)
-{ return iterator_range<Iterator>(b, e); }
+iterator_range<Iterator> make_iterator_range(Iterator const& begin,
+                                             Iterator const& end)
+{ return iterator_range<Iterator>(begin, end); }
 
 }  // namespace thrust
