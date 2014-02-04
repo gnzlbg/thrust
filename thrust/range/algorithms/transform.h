@@ -17,7 +17,10 @@
 
 #pragma once
 
+#include <thrust/detail/type_traits.h>
+#include <thrust/range/utilities.h>
 #include <thrust/transform.h>
+#include <thrust/range/adaptors/transformed.h>
 
 namespace thrust {
 
@@ -25,23 +28,21 @@ namespace thrust {
 /// \ingroup transformations
 /// \{
 
-/// \brief Transforms the elements of the \t SinglePassRange \p range in place
+/// \brief Returns a view of the elements of the \t SinglePassRange \p range
 /// using the \t UnaryFunction \p op.
 template<typename SinglePassRange, typename UnaryFunction>
-SinglePassRange transform(SinglePassRange& range, UnaryFunction op) {
-  using thrust::system::detail::generic::select_system;
-  typedef typename SinglePassRange::iterator Iterator;
-  typedef typename thrust::iterator_system<Iterator>::type  System;
-  System system;
-  thrust::transform(select_system(system), thrust::begin(range),
-                    thrust::end(range), thrust::begin(range), op);
-  return range;
-}
+thrust::transformed_range<SinglePassRange, UnaryFunction>
+transform(SinglePassRange const& range, UnaryFunction op)
+{ return thrust::make_transformed_range(range, op); }
+
+#if __cplusplus >= 201103L  // \todo C++03 depends on WAR for concept overl.
 
 /// \brief Assing to the \t OutputIterator \p output the result of transforming
 /// the \t SinglePassRange \p range using the \t UnaryFunction \p op.
 template<typename SinglePassRange, typename OutputIterator,
          typename UnaryFunction>
+typename thrust::detail::enable_if<
+  !models::single_pass_range<OutputIterator>::value, OutputIterator>::type
 OutputIterator transform(SinglePassRange const& range, OutputIterator output,
                          UnaryFunction op) {
   using thrust::system::detail::generic::select_system;
@@ -54,18 +55,25 @@ OutputIterator transform(SinglePassRange const& range, OutputIterator output,
                            thrust::end(range), output, op);
 }
 
+#endif  // C++ version >= C++11
+
 /// \brief Assing to the \t SinglePassRange \p output the result of transforming
 /// the \t SinglePassRange \p range using the \t UnaryFunction \p op.
-template<typename SinglePassRange, typename UnaryFunction>
-SinglePassRange transform(SinglePassRange const& range, SinglePassRange& output,
-                          UnaryFunction op) {
+template<typename SinglePassRange, typename OutputRange, typename UnaryFunction>
+#if __cplusplus >= 201103L
+typename thrust::detail::enable_if<
+  models::single_pass_range<OutputRange>::value, OutputRange>::type
+#else
+OutputRange
+#endif
+transform(SinglePassRange const& range, OutputRange& output, UnaryFunction op) {
   using thrust::system::detail::generic::select_system;
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type  System;
   System system;
   thrust::transform(select_system(system), thrust::begin(range),
                     thrust::end(range), output, op);
-  return output;
+return output;
 }
 
 /// \}  // end modifying transformations
