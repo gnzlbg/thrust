@@ -71,7 +71,7 @@ transform(SinglePassRange const& range, OutputRange& output, UnaryFunction op) {
   typedef typename thrust::iterator_system<Iterator>::type  System;
   System system;
   thrust::transform(select_system(system), thrust::begin(range),
-                    thrust::end(range), output, op);
+                      thrust::end(range), thrust::begin(output), op);
 return output;
 }
 
