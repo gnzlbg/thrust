@@ -113,7 +113,7 @@ template<typename Iterator> struct iterator_range {
   __host__ __device__
   reference operator[](difference_type i) const {
     assert(i >= 0 && i < size() && "index out of bounds!");
-    return *begin()[i];
+    return begin()[i];
   }
   __host__ __device__
   reference operator()(difference_type i) const

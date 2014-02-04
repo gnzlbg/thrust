@@ -13,13 +13,22 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-/// \file \brief Includes all range-based algorithms
+/// \file \brief Implements the rang-based interface of the sequence algorithm
 
 #pragma once
 
-#include <thrust/range/algorithms/copy.h>
-#include <thrust/range/algorithms/for_each.h>
-#include <thrust/range/algorithms/reduce.h>
-#include <thrust/range/algorithms/sequence.h>
-#include <thrust/range/algorithms/transform.h>
-#include <thrust/range/algorithms/transform_reduce.h>
+#include <thrust/sequence.h>
+
+namespace thrust {
+
+template<typename SinglePassRange, typename T>
+SinglePassRange sequence(SinglePassRange& range, T init = T(), T step = T(1)) {
+  using thrust::system::detail::generic::select_system;
+  typedef typename SinglePassRange::iterator Iterator;
+  typedef typename thrust::iterator_system<Iterator>::type System;
+  System system;
+  thrust::sequence(select_system(system), begin(range), end(range), init, step);
+  return range;
+}
+
+} // namespace thrust
