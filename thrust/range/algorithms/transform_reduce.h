@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <thrust/functional.h>
 #include <thrust/transform_reduce.h>
 
 namespace thrust
@@ -31,9 +32,10 @@ namespace thrust
 /// element of the \t SinglePassRange \p range using the \t BindaryFunction \p
 /// binary_op with start value \p init of type \t T.
 template<typename SinglePassRange, typename UnaryFunction,
-         typename T, typename BinaryFunction>
+         typename T = typename thrust::unary_traits<UnaryFunction>::result_type,
+         typename BinaryFunction = plus<T> >
 T transform_reduce(SinglePassRange const& range, UnaryFunction unary_op,
-                   T init, BinaryFunction binary_op) {
+                   T init = T(), BinaryFunction binary_op = BinaryFunction()) {
   using thrust::system::detail::generic::select_system;
   typedef typename SinglePassRange::iterator Iterator;
   typedef typename thrust::iterator_system<Iterator>::type System;
