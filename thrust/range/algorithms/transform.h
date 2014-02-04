@@ -68,8 +68,6 @@ SinglePassRange transform(SinglePassRange const& range, SinglePassRange& output,
   return output;
 }
 
+/// \}  // end modifying transformations
 
-/*! \} // end modifying transformations
- */
-
-} // end namespace thrust
+}  // namespace thrust

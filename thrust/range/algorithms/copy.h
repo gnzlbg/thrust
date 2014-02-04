@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include <type_traits>
-#include <thrust/copy.h>
+#include <thrust/detail/type_traits.h>
 #include <thrust/range/utilities.h>
+#include <thrust/copy.h>
 
 namespace thrust
 {
@@ -33,15 +33,15 @@ namespace thrust
 /// \brief Copies the \t SinglePassRange \p range to the \t OutputIterator \p
 /// result
 template<typename SinglePassRange, typename OutputIterator>
-typename std::enable_if<!models::single_pass_range<OutputIterator>::value,
-                        OutputIterator>::type
+typename thrust::detail::enable_if<
+  !models::single_pass_range<OutputIterator>::value, OutputIterator>::type
 copy(SinglePassRange const& range, OutputIterator result)
 { return copy(range.begin(), range.end(), result); }
 
 /// \brief Copies the \t SinglePassRange range to the \t OutputRange \p result.
 template<typename SinglePassRange, typename OutputRange>
-typename std::enable_if<models::single_pass_range<OutputRange>::value,
-                        OutputRange>::type
+typename thrust::detail::enable_if<
+  models::single_pass_range<OutputRange>::value, OutputRange>::type
 copy(SinglePassRange const& range, OutputRange& result) {
   copy(range.begin(), range.end(), result.begin());
   return result;
