@@ -34,12 +34,8 @@ template<typename SinglePassRange,
          typename BinaryFunction = plus<T> >
 T reduce(SinglePassRange const& range, T init = T(),
          BinaryFunction binary_op = BinaryFunction()) {
-  using thrust::system::detail::generic::select_system;
-  typedef typename SinglePassRange::iterator Iterator;
-  typedef typename thrust::iterator_system<Iterator>::type System;
-  System system;
-  return thrust::reduce(select_system(system), thrust::begin(range),
-                        thrust::end(range), init, binary_op);
+  return thrust::reduce(thrust::begin(range), thrust::end(range),
+                        init, binary_op);
 }
 
 /// \}  // end reductions

@@ -28,21 +28,16 @@ namespace thrust {
 /// \ingroup transformations
 /// \{
 
-/// \brief Returns a view of the elements of the \t SinglePassRange \p range
-/// using the \t UnaryFunction \p op.
-template<typename SinglePassRange, typename UnaryFunction>
-thrust::transformed_range<const SinglePassRange, UnaryFunction>
-transform(SinglePassRange const& range, UnaryFunction op)
-{ return thrust::make_transformed_range(range, op); }
-
-/// \brief Assing to the \t SinglePassRange \p output the result of transforming
-/// the \t SinglePassRange \p range using the \t UnaryFunction \p op.
-template<typename SinglePassRange, typename OutputRange, typename UnaryFunction>
-OutputRange& transform(SinglePassRange const& range,
-                       OutputRange& output, UnaryFunction op) {
-  thrust::transform(thrust::begin(range), thrust::end(range),
-                    thrust::begin(output), op);
-  return output;
+/// \brief Sorts the element in the \t SinglePassRange \p range such that the \t
+/// StrictWeakOrdering \p cmp is satisfied (i.e. such that \p cmp evaluates to
+/// true for every contiguous pair of elements).
+template<typename SinglePassRange,
+         typename StrictWeakOrdering
+         = thrust::less<typename SinglePassRange::value_type> >
+SinglePassRange& sort(SinglePassRange& range,
+                      StrictWeakOrdering cmp = StrictWeakOrdering() ) {
+  thrust::sort(thrust::begin(range), thrust::end(range), cmp);
+  return range;
 }
 
 /// \}  // end modifying transformations

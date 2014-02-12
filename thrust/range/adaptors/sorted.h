@@ -13,30 +13,35 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-/// \file \brief Implements the rang-based interface of the copy algorithm
+/// \file \brief Implements sorted adaptor
 
 #pragma once
 
-#include <thrust/detail/type_traits.h>
 #include <thrust/range/utilities.h>
-#include <thrust/copy.h>
+#include <thrust/range/iterator_range.h>
+#include <thrust/range/adaptors/holder.h>
 
-namespace thrust
-{
+namespace thrust {
 
-/// \addtogroup algorithms
+namespace detail {
 
-///\addtogroup copying
-///  \ingroup algorithms
-/// \{
+template<typename T> struct SortHolder : Holder<T> {
+  __host__ __device__ SortHolder(T f) : Holder<T>(f) {}
+};
 
-/// \brief Copies the \t SinglePassRange range to the \t OutputRange \p result.
-template<typename SinglePassRange, typename OutputRange>
-OutputRange& copy(SinglePassRange const& range, OutputRange& result) {
-  copy(thrust::begin(range), thrust::end(range), thrust::begin(result));
-  return result;
+}  // namespace detail
+
+template<typename BinaryFunction>
+__host__ __device__
+detail::SortHolder<BinaryFunction> sorted(BinaryFunction f)
+{ return detail::SortHolder<BinaryFunction>(f); }
+
+template<typename SinglePassRange, typename BinaryFunction>
+__host__ __device__
+SinglePassRange&
+operator|(SinglePassRange& r, detail::SortHolder<BinaryFunction> const& holder) {
+  sort(r, holder.value);
+  return r;
 }
-
-/// \}  // end copying
 
 }  // namespace thrust

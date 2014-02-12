@@ -13,30 +13,23 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-/// \file \brief Implements the rang-based interface of the copy algorithm
+/// \file \brief Implements zip iterator adaptor
 
 #pragma once
 
-#include <thrust/detail/type_traits.h>
 #include <thrust/range/utilities.h>
-#include <thrust/copy.h>
+#include <thrust/range/iterator_range.h>
 
-namespace thrust
-{
+namespace thrust {
 
-/// \addtogroup algorithms
+namespace detail {
 
-///\addtogroup copying
-///  \ingroup algorithms
-/// \{
+template<typename T> struct Holder {
+  __host__ __device__
+  Holder(T f) : value(f) {}
+  T value;
+};
 
-/// \brief Copies the \t SinglePassRange range to the \t OutputRange \p result.
-template<typename SinglePassRange, typename OutputRange>
-OutputRange& copy(SinglePassRange const& range, OutputRange& result) {
-  copy(thrust::begin(range), thrust::end(range), thrust::begin(result));
-  return result;
-}
-
-/// \}  // end copying
+}  // namespace detail
 
 }  // namespace thrust

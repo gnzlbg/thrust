@@ -39,9 +39,9 @@ template<typename Iterator> struct iterator_range {
   #if __cplusplus >= 201103L
   __host__ __device__ iterator_range()                            = default;
   __host__ __device__ iterator_range(iterator_range const&)       = default;
-  __host__ __device__ ~iterator_range()                           = default;
   __host__ __device__ iterator_range(iterator_range&&)            = default;
   __host__ __device__ iterator_range& operator=(iterator_range&&) = default;
+  __host__ __device__ ~iterator_range()                           = default;
 
   // static_asserts:
   /// - for Iterator: move construction should be noexcept(true)

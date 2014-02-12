@@ -20,22 +20,19 @@
 #include <thrust/range/utilities.h>
 #include <thrust/range/iterator_range.h>
 #include <thrust/iterator/transform_iterator.h>
+#include <thrust/range/adaptors/holder.h>
 
 namespace thrust {
 
 template<typename SinglePassRange, typename UnaryFunction>
 struct transformed_range
   : iterator_range<transform_iterator<UnaryFunction,
-                                      typename SinglePassRange::iterator> > {
+                                      typename SinglePassRange::const_iterator> > {
 
   typedef iterator_range<
     transform_iterator<UnaryFunction,
-                       typename SinglePassRange::iterator> > base;
+                       typename SinglePassRange::const_iterator> > base;
 
-  __host__ __device__
-  transformed_range(SinglePassRange& range, UnaryFunction f)
-      : base(make_transform_iterator(begin(range), f),
-             make_transform_iterator(end(range), f)) {}
   __host__ __device__
   transformed_range(SinglePassRange const& range, UnaryFunction f)
       : base(make_transform_iterator(begin(range), f),
@@ -44,22 +41,14 @@ struct transformed_range
 
 template<typename SinglePassRange, typename UnaryFunction>
 __host__ __device__
-transformed_range<SinglePassRange, UnaryFunction>
+transformed_range<const SinglePassRange, UnaryFunction>
 make_transformed_range(SinglePassRange const& r, UnaryFunction f)
-{ return transformed_range<SinglePassRange, UnaryFunction>(r, f); }
-
-template<typename SinglePassRange, typename UnaryFunction>
-__host__ __device__
-transformed_range<SinglePassRange, UnaryFunction>
-make_transformed_range(SinglePassRange& r, UnaryFunction f)
-{ return transformed_range<SinglePassRange, UnaryFunction>(r, f); }
+{ return transformed_range<const SinglePassRange, UnaryFunction>(r, f); }
 
 namespace detail {
 
-template<typename T> struct TransformHolder {
-  __host__ __device__
-  TransformHolder(T f) : value(f) {}
-  T value;
+template<typename T> struct TransformHolder : Holder<T> {
+  __host__ __device__ TransformHolder(T f) : Holder<T>(f) {}
 };
 
 }  // namespace detail
@@ -71,14 +60,8 @@ detail::TransformHolder<UnaryFunction> transformed(UnaryFunction f)
 
 template<typename SinglePassRange, typename UnaryFunction>
 __host__ __device__
-transformed_range<SinglePassRange, UnaryFunction>
+transformed_range<const SinglePassRange, UnaryFunction>
 operator|(SinglePassRange const& r, detail::TransformHolder<UnaryFunction> const& holder)
-{ return make_transformed_range(r, holder.value); }
-
-template<typename SinglePassRange, typename UnaryFunction>
-__host__ __device__
-transformed_range<SinglePassRange, UnaryFunction>
-operator|(SinglePassRange & r, detail::TransformHolder<UnaryFunction> const& holder)
 { return make_transformed_range(r, holder.value); }
 
 }  // namespace thrust

@@ -29,15 +29,16 @@ namespace thrust {
 /// SinglePassRange \p range.
 template<typename SinglePassRange, typename UnaryFunction>
 SinglePassRange for_each(SinglePassRange const& range, UnaryFunction op) {
-  using thrust::system::detail::generic::select_system;
-  typedef typename SinglePassRange::iterator Iterator;
-  typedef typename thrust::iterator_system<Iterator>::type System;
-
-  System system;
-  thrust::for_each(select_system(system), thrust::begin(range),
-                   thrust::end(range), op);
+  thrust::for_each(thrust::begin(range), thrust::end(range), op);
   return range;
 }
+
+template<typename SinglePassRange, typename UnaryFunction>
+SinglePassRange& for_each(SinglePassRange& range, UnaryFunction op) {
+  thrust::for_each(thrust::begin(range), thrust::end(range), op);
+  return range;
+}
+
 
 /// \}  // end non-modifying transformations
 

@@ -13,30 +13,35 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 
-/// \file \brief Implements the rang-based interface of the copy algorithm
+/// \file \brief Implements copied adaptor
 
 #pragma once
 
-#include <thrust/detail/type_traits.h>
 #include <thrust/range/utilities.h>
-#include <thrust/copy.h>
+#include <thrust/range/iterator_range.h>
+#include <thrust/range/adaptors/holder.h>
 
-namespace thrust
-{
+namespace thrust {
 
-/// \addtogroup algorithms
+namespace detail {
 
-///\addtogroup copying
-///  \ingroup algorithms
-/// \{
+template<typename T> struct CopiedHolder : Holder<T> {
+  __host__ __device__ CopiedHolder(T f) : Holder<T>(f) {}
+};
 
-/// \brief Copies the \t SinglePassRange range to the \t OutputRange \p result.
+}  // namespace detail
+
+template<typename OutputRange>
+__host__ __device__
+detail::CopiedHolder<OutputRange&> copy(OutputRange& r)
+{ return detail::CopiedHolder<OutputRange&>(r); }
+
 template<typename SinglePassRange, typename OutputRange>
-OutputRange& copy(SinglePassRange const& range, OutputRange& result) {
-  copy(thrust::begin(range), thrust::end(range), thrust::begin(result));
-  return result;
+__host__ __device__
+OutputRange&
+operator|(SinglePassRange const& r, detail::CopiedHolder<OutputRange&> const& holder) {
+  thrust::copy(r, const_cast<OutputRange&>(holder.value));
+  return const_cast<OutputRange&>(holder.value);
 }
-
-/// \}  // end copying
 
 }  // namespace thrust

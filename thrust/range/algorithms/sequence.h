@@ -21,14 +21,12 @@
 
 namespace thrust {
 
+/// \brief Initializes the \t SinglePassRange \p range with the sequence \p init
+/// + 0 * \p step, \p init + 1 * \p step, ..., \p init + (distance(range) - 1) *
+/// \p step.
 template<typename SinglePassRange, typename T>
-SinglePassRange sequence(SinglePassRange& range, T init = T(), T step = T(1)) {
-  using thrust::system::detail::generic::select_system;
-  typedef typename SinglePassRange::iterator Iterator;
-  typedef typename thrust::iterator_system<Iterator>::type System;
-  System system;
-  thrust::sequence(select_system(system), thrust::begin(range),
-                   thrust::end(range), init, step);
+SinglePassRange& sequence(SinglePassRange& range, T init = T(), T step = T(1)) {
+  thrust::sequence(thrust::begin(range), thrust::end(range), init, step);
   return range;
 }
 

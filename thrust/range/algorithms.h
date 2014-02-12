@@ -21,5 +21,6 @@
 #include <thrust/range/algorithms/for_each.h>
 #include <thrust/range/algorithms/reduce.h>
 #include <thrust/range/algorithms/sequence.h>
+#include <thrust/range/algorithms/sort.h>
 #include <thrust/range/algorithms/transform.h>
 #include <thrust/range/algorithms/transform_reduce.h>
