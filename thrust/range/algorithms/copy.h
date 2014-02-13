@@ -17,9 +17,8 @@
 
 #pragma once
 
-#include <thrust/detail/type_traits.h>
-#include <thrust/range/utilities.h>
 #include <thrust/copy.h>
+#include <thrust/range/utilities.h>
 
 namespace thrust
 {

@@ -25,21 +25,24 @@ namespace thrust {
 
 namespace detail {
 
-template<typename T> struct CopiedHolder : Holder<T> {
-  __host__ __device__ CopiedHolder(T f) : Holder<T>(f) {}
+/// \brief \t OutputRange holder for the pipe version of the copy algorithm.
+template<typename OutputRange> struct CopiedHolder : Holder<OutputRange> {
+  __host__ __device__ CopiedHolder(OutputRange f) : Holder<OutputRange>(f) {}
 };
 
 }  // namespace detail
 
+/// \brief Pipe-version of the copy algorithm
 template<typename OutputRange>
-__host__ __device__
-detail::CopiedHolder<OutputRange&> copy(OutputRange& r)
+__host__ __device__ detail::CopiedHolder<OutputRange&> copy(OutputRange& r)
 { return detail::CopiedHolder<OutputRange&>(r); }
 
+
+/// \brief Pipe operator overload for the copy algorithm
 template<typename SinglePassRange, typename OutputRange>
 __host__ __device__
-OutputRange&
-operator|(SinglePassRange const& r, detail::CopiedHolder<OutputRange&> const& holder) {
+OutputRange& operator|(SinglePassRange const& r,
+                       detail::CopiedHolder<OutputRange&> const& holder) {
   thrust::copy(r, const_cast<OutputRange&>(holder.value));
   return const_cast<OutputRange&>(holder.value);
 }

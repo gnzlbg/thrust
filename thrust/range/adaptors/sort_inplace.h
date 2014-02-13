@@ -25,21 +25,29 @@ namespace thrust {
 
 namespace detail {
 
-template<typename T> struct SortHolder : Holder<T> {
-  __host__ __device__ SortHolder(T f) : Holder<T>(f) {}
+/// \brief \t StricktWeakOrdering holder for the pipe version of the sort
+/// algorithm.
+template<typename StricktWeakOrdering>
+struct SortHolder : Holder<StricktWeakOrdering> {
+  __host__ __device__
+  SortHolder(StricktWeakOrdering f) : Holder<StricktWeakOrdering>(f) {}
 };
 
 }  // namespace detail
 
-template<typename BinaryFunction>
+/// \brief Pipe version of the sort algorithm.
+template<typename StricktWeakOrdering>
 __host__ __device__
-detail::SortHolder<BinaryFunction> sorted(BinaryFunction f)
-{ return detail::SortHolder<BinaryFunction>(f); }
+detail::SortHolder<StricktWeakOrdering>
+sort_inplace(StricktWeakOrdering f)
+{ return detail::SortHolder<StricktWeakOrdering>(f); }
 
-template<typename SinglePassRange, typename BinaryFunction>
+/// \brief Pipe overload to apply the transform algorithm
+template<typename SinglePassRange, typename StricktWeakOrdering>
 __host__ __device__
 SinglePassRange&
-operator|(SinglePassRange& r, detail::SortHolder<BinaryFunction> const& holder) {
+operator|(SinglePassRange& r,
+          detail::SortHolder<StricktWeakOrdering> const& holder) {
   sort(r, holder.value);
   return r;
 }

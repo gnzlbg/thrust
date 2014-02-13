@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <thrust/range/adaptors/copied.h>
-#include <thrust/range/adaptors/sorted.h>
-#include <thrust/range/adaptors/transformed.h>
+#include <thrust/range/adaptors/copy.h>
+#include <thrust/range/adaptors/sort_inplace.h>
+#include <thrust/range/adaptors/transform.h>
 #include <thrust/range/adaptors/zip.h>

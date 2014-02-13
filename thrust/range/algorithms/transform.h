@@ -17,10 +17,9 @@
 
 #pragma once
 
-#include <thrust/detail/type_traits.h>
-#include <thrust/range/utilities.h>
 #include <thrust/transform.h>
-#include <thrust/range/adaptors/transformed.h>
+#include <thrust/range/utilities.h>
+#include <thrust/range/adaptors/transform.h>
 
 namespace thrust {
 
@@ -31,7 +30,7 @@ namespace thrust {
 /// \brief Returns a view of the elements of the \t SinglePassRange \p range
 /// using the \t UnaryFunction \p op.
 template<typename SinglePassRange, typename UnaryFunction>
-thrust::transformed_range<const SinglePassRange, UnaryFunction>
+typename thrust::transformed_range<const SinglePassRange, UnaryFunction>::type
 transform(SinglePassRange const& range, UnaryFunction op)
 { return thrust::make_transformed_range(range, op); }
 

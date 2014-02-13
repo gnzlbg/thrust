@@ -36,8 +36,8 @@ RETURNS(zip_iterator<tuple<InputIterators...>>{make_tuple(inputIterators...)});
 template<typename... SinglePassRanges>
 __host__ __device__
 auto zip(SinglePassRanges&&... ranges)
-RETURNS(make_iterator_range(detail::make_zip_iterator_(begin(ranges)...),
-                            detail::make_zip_iterator_(end(ranges)...)));
+RETURNS(make_iterator_range(detail::make_zip_iterator_(thrust::begin(ranges)...),
+                            detail::make_zip_iterator_(thrust::end(ranges)...)));
 
 #else  // C++ < C++11
 
@@ -75,20 +75,20 @@ make_zip_iterator_(InputIterator0 it0, InputIterator1 it1, InputIterator2 it2,
 template<typename SinglePassRange0>
 __host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator> > >
-zip(SinglePassRange0 range0) {
-  return make_iterator_range(detail::make_zip_iterator_(range0.begin()),
-                             detail::make_zip_iterator_(range0.end()));
+zip(SinglePassRange0& range0) {
+  return make_iterator_range(detail::make_zip_iterator_(thrust::begin(range0)),
+                             detail::make_zip_iterator_(thrust::end(range0)));
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1>
 __host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator> > >
-zip(SinglePassRange0 range0, SinglePassRange1 range1) {
-  return make_iterator_range(detail::make_zip_iterator_(range0.begin(),
-                                                        range1.begin()),
-                             detail::make_zip_iterator_(range0.end(),
-                                                        range1.end()));
+zip(SinglePassRange0& range0, SinglePassRange1& range1) {
+  return make_iterator_range(detail::make_zip_iterator_(thrust::begin(range0),
+                                                        thrust::begin(range1)),
+                             detail::make_zip_iterator_(thrust::end(range0),
+                                                        thrust::end(range1)));
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1,
@@ -97,14 +97,14 @@ __host__ __device__
 iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator,
                                   typename SinglePassRange2::iterator> > >
-zip(SinglePassRange0 range0, SinglePassRange1 range1,
-      SinglePassRange2 range2) {
-  return make_iterator_range(detail::make_zip_iterator_(range0.begin(),
-                                                        range1.begin(),
-                                                        range2.begin()),
-                             detail::make_zip_iterator_(range0.end(),
-                                                        range1.end(),
-                                                        range2.end()));
+zip(SinglePassRange0& range0, SinglePassRange1& range1,
+    SinglePassRange2& range2) {
+  return make_iterator_range(detail::make_zip_iterator_(thrust::begin(range0),
+                                                        thrust::begin(range1),
+                                                        thrust::begin(range2)),
+                             detail::make_zip_iterator_(thrust::end(range0),
+                                                        thrust::end(range1),
+                                                        thrust::end(range2)));
 }
 
 template<typename SinglePassRange0, typename SinglePassRange1,
@@ -114,16 +114,16 @@ iterator_range<zip_iterator<tuple<typename SinglePassRange0::iterator,
                                   typename SinglePassRange1::iterator,
                                   typename SinglePassRange2::iterator,
                                   typename SinglePassRange3::iterator> > >
-zip(SinglePassRange0 range0, SinglePassRange1 range1,
-      SinglePassRange2 range2, SinglePassRange3 range3) {
-  return make_iterator_range(detail::make_zip_iterator_(range0.begin(),
-                                                        range1.begin(),
-                                                        range2.begin(),
-                                                        range3.begin()),
-                             detail::make_zip_iterator_(range0.end(),
-                                                        range1.end(),
-                                                        range2.end(),
-                                                        range3.end()));
+zip(SinglePassRange0& range0, SinglePassRange1& range1,
+    SinglePassRange2& range2, SinglePassRange3& range3) {
+  return make_iterator_range(detail::make_zip_iterator_(thrust::begin(range0),
+                                                        thrust::begin(range1),
+                                                        thrust::begin(range2),
+                                                        thrust::begin(range3)),
+                             detail::make_zip_iterator_(thrust::end(range0),
+                                                        thrust::end(range1),
+                                                        thrust::end(range2),
+                                                        thrust::end(range3)));
 }
 
 #endif

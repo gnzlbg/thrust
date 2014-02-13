@@ -1,10 +1,23 @@
 #include <unittest/unittest.h>
 #include <thrust/functional.h>
 #include <thrust/range.h>
+#include <iostream>
 
 struct reduced : thrust::unary_function<thrust::tuple<int, int, int>, int> {
   int operator()(thrust::tuple<int, int, int> i) {
     return thrust::get<0>(i) + thrust::get<1>(i) + thrust::get<2>(i);
+  }
+};
+
+template<class T>
+struct neg_tuple : thrust::unary_function<thrust::tuple<T, T, T>,
+                                          thrust::tuple<T, T, T> > {
+  thrust::tuple<T, T, T> operator()(thrust::tuple<T, T, T> i) {
+    thrust::tuple<T, T, T> j;
+    thrust::get<0>(j) = - thrust::get<0>(i);
+    thrust::get<1>(j) = - thrust::get<1>(i);
+    thrust::get<2>(j) = - thrust::get<2>(i);
+    return j;
   }
 };
 
@@ -16,6 +29,13 @@ struct assert_range : thrust::unary_function<int, void> {
   }
   const int b;
   const int e;
+};
+
+template<int i, class T>
+struct greater_element : thrust::unary_function<thrust::tuple<T, T, T>, bool> {
+  bool operator()(thrust::tuple<T, T, T> a, thrust::tuple<T, T, T> b) {
+    return thrust::get<i>(a) > thrust::get<i>(b);
+  }
 };
 
 template <class Vector>
@@ -42,7 +62,7 @@ void TestGeneralRange(void) {
   Vector output(4);
 
   thrust::copy(thrust::zip(input1, input2, input3)
-               | thrust::transformed(reduced()),
+               | thrust::transform(reduced()),
               output);
   // output = { sum(1,2,3), sum(2,3,4), sum(3,4,5), sum(4,5,6) = {6, 9, 12, 15};
 
@@ -55,7 +75,7 @@ void TestGeneralRange(void) {
 
   Vector output_pipe(4);
   thrust::zip(input1, input2, input3)
-      | thrust::transformed(reduced()) | thrust::copy(output_pipe);
+      | thrust::transform(reduced()) | thrust::copy(output_pipe);
 
   ASSERT_EQUAL(output_pipe[0], 6);
   ASSERT_EQUAL(output_pipe[1], 9);
@@ -71,18 +91,18 @@ void TestGeneralRange(void) {
   thrust::sort(output);
 
   thrust::zip(input1, input2, input3)
-      | thrust::transformed(reduced())
-      | thrust::copy(output_pipe)
-      | thrust::sorted(thrust::greater<T>())
-      | thrust::transformed(Negate())
-      | thrust::copy(output_pipe);
+    | thrust::transform(reduced())
+    | thrust::copy(output_pipe)
+    | thrust::sort_inplace(thrust::greater<T>())
+    | thrust::transform(Negate())
+    | thrust::copy(output_pipe);
   ASSERT_EQUAL(output_pipe[0], -15);
   ASSERT_EQUAL(output_pipe[1], -12);
   ASSERT_EQUAL(output_pipe[2], -9);
   ASSERT_EQUAL(output_pipe[3], -6);
 
-  thrust::transformed_range<const Vector, Negate> lazy_tr
-      = thrust::transform(output, Negate());
+  typename thrust::transformed_range<const Vector, Negate>::type
+  lazy_tr = thrust::transform(output, Negate());
 
   Vector copy1(4);
   thrust::copy(lazy_tr, copy1);
@@ -103,8 +123,8 @@ void TestGeneralRange(void) {
   ASSERT_EQUAL(thrust::reduce(output), 42);
 
   // test transform_reduce
-  ASSERT_EQUAL(thrust::transform_reduce(zip(input1, input2, input3), reduced()),
-               42);
+  ASSERT_EQUAL(thrust::transform_reduce(zip(input1, input2, input3),
+                                        reduced()), 42);
 
   // test counting_range
   thrust::copy(thrust::make_counting_range(0, 4), output);
@@ -114,5 +134,15 @@ void TestGeneralRange(void) {
   ASSERT_EQUAL(output[3], 3);
 
 
+  thrust::iterator_range<thrust::zip_iterator<thrust::tuple<Iterator,Iterator,Iterator> > >
+  zipped_rng = zip(input1, input2, input3);
+
+
+  zipped_rng | thrust::sort_inplace(greater_element<0, T>())
+             | thrust::transform(neg_tuple<T>()) | thrust::copy(zipped_rng);
+  ASSERT_EQUAL(input1[0], -4);  ASSERT_EQUAL(input2[0], -5);  ASSERT_EQUAL(input3[0], -6);
+  ASSERT_EQUAL(input1[1], -3);  ASSERT_EQUAL(input2[1], -4);  ASSERT_EQUAL(input3[1], -5);
+  ASSERT_EQUAL(input1[2], -2);  ASSERT_EQUAL(input2[2], -3);  ASSERT_EQUAL(input3[2], -4);
+  ASSERT_EQUAL(input1[3], -1);  ASSERT_EQUAL(input2[3], -2);  ASSERT_EQUAL(input3[3], -3);
 }
 DECLARE_VECTOR_UNITTEST(TestGeneralRange);

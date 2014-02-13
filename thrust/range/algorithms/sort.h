@@ -17,10 +17,8 @@
 
 #pragma once
 
-#include <thrust/detail/type_traits.h>
+#include <thrust/sort.h>
 #include <thrust/range/utilities.h>
-#include <thrust/transform.h>
-#include <thrust/range/adaptors/transformed.h>
 
 namespace thrust {
 
